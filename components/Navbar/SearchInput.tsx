@@ -8,7 +8,7 @@ interface SearchInputProps {
 const SearchInput: React.FC<SearchInputProps> = () => {
 	return (
 		<Flex flexGrow="1">
-			<InputGroup bg="gray.50">
+			<InputGroup>
 				<InputLeftElement pointerEvents="none">
 					<SearchIcon color="gray.400" />
 				</InputLeftElement>
