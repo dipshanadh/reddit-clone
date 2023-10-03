@@ -3,7 +3,6 @@ import { ComponentStyleConfig } from "@chakra-ui/react";
 export const Button: ComponentStyleConfig = {
 	baseStyle: {
 		borderRadius: "full",
-		color: "brand.100",
 		border: "2px solid",
 		fontWeight: "bold",
 		_focus: { boxShadow: "none" },
