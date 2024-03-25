@@ -1,7 +1,9 @@
 import { useState } from "react";
 import { Text, Button, Input, VStack, HStack } from "@chakra-ui/react";
 import { useSetRecoilState } from "recoil";
+import { useCreateUserWithEmailAndPassword } from "react-firebase-hooks/auth";
 
+import { auth } from "@/firebase/clientApp";
 import { authModalState } from "@/atom/authModalAtom";
 
 interface SignUpProps {}
@@ -14,6 +16,9 @@ const SignUp: React.FC<SignUpProps> = () => {
 		password: "",
 		confirmPassword: "",
 	});
+	const [formError, setFormError] = useState("");
+	const [createUserWithEmailAndPassword, user, loading, error] =
+		useCreateUserWithEmailAndPassword(auth);
 
 	const onChange = (event: React.ChangeEvent<HTMLInputElement>) => {
 		setSignupForm(prevState => ({
@@ -22,8 +27,16 @@ const SignUp: React.FC<SignUpProps> = () => {
 		}));
 	};
 
-	// Firebase logic
-	const onSubmit = () => {};
+	const onSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+		event.preventDefault();
+
+		if (formError) setFormError("");
+
+		if (signupForm.password !== signupForm.confirmPassword)
+			return setFormError("Passwords do not match");
+
+		createUserWithEmailAndPassword(signupForm.email, signupForm.password);
+	};
 
 	return (
 		<form onSubmit={onSubmit}>
@@ -91,15 +104,23 @@ const SignUp: React.FC<SignUpProps> = () => {
 						borderColor: "blue.500",
 					}}
 				/>
+				<Text
+					textAlign="center"
+					mt={2}
+					fontSize="10pt"
+					color="red"
+				>
+					{formError || error?.message}
+				</Text>
 				<Button
 					type="submit"
 					width="100%"
 					height="36px"
+					isLoading={loading}
 				>
 					Sign Up
 				</Button>
 			</VStack>
-
 			<HStack
 				gap="1ch"
 				marginBlock="16px"
